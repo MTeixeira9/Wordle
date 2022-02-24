@@ -45,6 +45,7 @@ const guessRows = [
 
 let currentRow = 0
 let currentTile = 0
+let isGameveOver = false
 
 guessRows.forEach((guessRow, guessRowIndex) => {
     const rowElement = document.createElement('div')
@@ -72,12 +73,12 @@ const handleClick = (letter) => {
 
     if (letter === '«') {
         deleteLetter()
-        return;
+        return
     }
 
     if (letter === 'ENTER') {
         checkRow()
-        return;
+        return
     }
 
     addLetter(letter)
@@ -109,6 +110,19 @@ const checkRow = () => {
     if (currentTile === 5) {
         if (wordle === guess) {
             showMessage('Magnificient!')
+            isGameveOver = true
+            return
+        }
+        else {
+            if (currentRow >= 5) {
+                showMessage('Game Over')
+                isGameveOver = true
+                return
+            }
+            else {
+                currentRow++
+                currentTile = 0
+            }
         }
     }
 }
