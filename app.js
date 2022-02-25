@@ -83,18 +83,19 @@ keys.forEach(key => {
 })
 
 const handleClick = (letter) => {
+    if (!isGameveOver) {
+        if (letter === '«') {
+            deleteLetter()
+            return
+        }
 
-    if (letter === '«') {
-        deleteLetter()
-        return
+        if (letter === 'ENTER') {
+            checkRow()
+            return
+        }
+
+        addLetter(letter)
     }
-
-    if (letter === 'ENTER') {
-        checkRow()
-        return
-    }
-
-    addLetter(letter)
 }
 
 const addLetter = (letter) => {
@@ -119,25 +120,38 @@ const deleteLetter = () => {
 
 const checkRow = () => {
     const guess = guessRows[currentRow].join('')
-    flipTile()
 
     if (currentTile === 5) {
-        if (wordle === guess) {
-            showMessage('Magnificient!')
-            isGameveOver = true
-            return
-        }
-        else {
-            if (currentRow >= 5) {
-                showMessage('Game Over')
-                isGameveOver = true
+        fetch(`http://localhost:8000/check/?word=${guess}`)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+
+            if (json === 'Entry word not found'){
+                showMessage('Word not in list')
                 return
             }
             else {
-                currentRow++
-                currentTile = 0
+                flipTile()
+
+                if (wordle === guess) {
+                    showMessage('Magnificient!')
+                    isGameveOver = true
+                    return
+                }
+                else {
+                    if (currentRow >= 5) {
+                        showMessage('Game Over')
+                        isGameveOver = true
+                        return
+                    }
+                    else {
+                        currentRow++
+                        currentTile = 0
+                    }
+                }
             }
-        }
+        }).catch(err => console.log(err))
     }
 }
 
