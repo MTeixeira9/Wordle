@@ -60,6 +60,18 @@ let currentRow = 0
 let currentTile = 0
 let isGameveOver = false
 
+document.addEventListener('keydown', function(event) {
+    if (event.keyCode >= 65 && event.keyCode <= 90) { // a-z
+        handleClick(event.key.toUpperCase())
+    }
+    else if (event.keyCode === 8) { // backspace/delete
+        handleClick('«')
+    }
+    else if (event.keyCode === 13) { // enter
+        handleClick(event.key.toUpperCase())
+    }
+});
+
 guessRows.forEach((guessRow, guessRowIndex) => {
     const rowElement = document.createElement('div')
     rowElement.setAttribute('id', 'guessRow-' + guessRowIndex)
